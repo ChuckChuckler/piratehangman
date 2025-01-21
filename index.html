@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e</title>
+</head>
+<body style="overflow: hidden; background-color: rgb(159, 201, 219);">
+    <style>
+        h1, h3, h2{text-align: center; color:rgb(37, 38, 41); font-family:'Times New Roman', Times, serif;}
+        .obj{width: 70px; height: 70px; position: absolute;}
+    </style>
+    <h1>Pirate Hangman</h1>
+    <h3 id="x" style="letter-spacing: 6px;"></h3>
+    <h3 id="z">Wrong Letters:</h3>
+    <h1 id="msg" style="background-color: rgb(44, 75, 100); color: white;"></h1>
+    <div class="obj" id="n" style="background-color: rgb(113, 175, 195); color: rgb(44, 75, 100); font-size: 50px; text-align: center; border: solid 2px rgb(44, 75, 100);"></div>
+    <div class="obj" id="pl" style="background-color: rgb(37, 38, 41); bottom: 10px;"></div>
+    <script>
+        let chances = 5;
+        let x2 = document.getElementById("x");
+        function ri(i){
+            return Math.floor(Math.random()*i);
+        }
+        x2.innerText = "";
+        let a = ['a', 'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+        let w = ['pirate','plunder','doubloon','scallywag','parrot','anchor','rum','cannon','ahoy','ship','harbor', "matey", "booty", "deck", "loot"];
+        let c = w[ri(w.length)];
+        for(let i = 0; i < c.length; i++){
+            x2.innerText += "_";
+        }
+        let pl = document.getElementById("pl");
+        let n = document.getElementById("n");
+        document.addEventListener("mousemove", function(e){
+           let x = e.clientX;
+           pl.style.transform=`translateX(${x}px)`;
+           let plb = pl.getBoundingClientRect();
+           let nb = n.getBoundingClientRect();
+           if(plb.right >= nb.left && plb.left <= nb.right && plb.top <= nb.bottom && plb.bottom >= nb.top){
+                if(!c.includes(n.innerText) && a.indexOf(n.innerText)!=-1){
+                    chances --;
+                    document.getElementById('z').innerText+=` ${n.innerText}, `;
+                    a.splice(a.indexOf(n.innerText), 1);
+                    if(chances == 0){
+                        clearInterval(in1);
+                        x2.innerText = c;
+                        document.getElementById("msg").innerText = "GAME OVER!";
+                    }
+                }else if(c.includes(n.innerText)){
+                    for(let i = 0; i < c.length; i++){
+                        if(c[i] == n.innerText){
+                            x2.innerText = x2.innerText.substring(0, i) + c[i] + x2.innerText.substring(i+1);
+                        }
+                    }
+                    if(x2.innerText == c){
+                        clearInterval(in1);
+                        document.getElementById("msg").innerText = "YOU DID IT!!";
+                    }
+                }
+           }
+        });
+        let in1 = setInterval(function(){
+            n.style.transform=`translateX(${(ri(window.innerWidth-200)+100)}px)`;
+            n.animate([{top: "200px"}, {top:"800px"}],{duration: 900});
+            n.innerText = a[ri(a.length)];
+        }, 850);
+    </script>
+</body>
+</html>
